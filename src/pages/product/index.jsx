@@ -24,6 +24,7 @@ const Products = () => {
                 <div key={item.id}>
                     <div>{item.title}</div>
                     <img src={item.image} alt='ic'/>
+                    
                 </div>
             ))}
         </div>
