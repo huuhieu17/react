@@ -61,7 +61,7 @@ const MenuItem = ({ path, name, child }) => {
                 setOpen(!open);
             }}>{name}</div>
             {open && child.map((item, index) => (
-                <Link to={item.path} key={index}>
+                <Link to={`${path}${item.path}`} key={index}>
                     <div className={pathname === item.path ? styles.active : null}>{item.name}</div>
                 </Link>
             ))}

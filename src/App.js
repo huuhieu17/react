@@ -7,6 +7,7 @@ import Home from './pages/home';
 import Products from './pages/product';
 import Layout from './components/Layout';
 import NotFound from './pages/404';
+import NganhNghe from './pages/danh-muc/nganh-nghe';
 function App() {
   return (
     <BrowserRouter>
@@ -15,7 +16,9 @@ function App() {
         <Route path="/" element={<Layout />}>
             <Route path="/" element={<Home/>} />
             <Route path="/products" element={<Products/>} />
-            <Route path="/nganh-nghe" element={<Products/>} />
+            <Route path='/danh-muc'>
+                <Route path='nganh-nghe' element={<NganhNghe/>}/>
+            </Route>
         </Route>
         <Route path="/login" element={<Login/>} />
       </Routes>
