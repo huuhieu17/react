@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { apiLoggedInInstance } from '../../../utils/api';
 import Modal from '../../../components/Modal';
 
 const NganhNghe = () => {
+   { const buttonRef = useRef();}
     const [data, setData] = useState([]); // lưu data từ api về
     const [currentPage, setCurrentPage] = useState(1); // lưu thông tin trang hiện tại
     const [pageSize, setPageSize] = useState(10); // số phần tử 1 trang
@@ -69,15 +70,18 @@ const NganhNghe = () => {
         // 20 - 30
         const paginate = data.slice((currentPage - 1) * pageSize, currentPage * pageSize);
         setPaginatedData(paginate)
+        setInterval(() => console.log("123") , 1000)
         return () => {
             setPaginatedData([]);
         }
     },[data, currentPage, pageSize]) // bắt state thay đổi 
+    
     return (
         <div className='w-full'>
             <div className='border w-full flex justify-between'>
-                <div>Ngành nghề ({data.length})</div>
-                <div><button onClick={() => {
+                <div >Ngành nghề ({data.length})</div>
+                <div><button ref={buttonRef} onClick={() => {
+                    console.log("click");
                     setShowModal(true)
                 }} className='border rounded p-2 border-[#000]'>Thêm ngành nghề </button></div>
             </div>

@@ -7,7 +7,8 @@ import Home from './pages/home';
 import Products from './pages/product';
 import Layout from './components/Layout';
 import NotFound from './pages/404';
-import NganhNghe from './pages/danh-muc/nganh-nghe';
+import NganhNghe from './pages/danh-muc/nganh-nghe/demo';
+
 function App() {
   return (
     <BrowserRouter>
