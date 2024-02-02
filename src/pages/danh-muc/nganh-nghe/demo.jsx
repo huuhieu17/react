@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
-import apiInstance, { apiLoggedInInstance } from '../../../utils/api';
+import React, { useEffect, useRef, useState } from 'react';
 import { DemoModal } from '../../../components/Modal1';
+import { apiLoggedInInstance } from '../../../utils/api';
 
 const NganhNghe = () => {
     const buttonRef = useRef();
@@ -14,16 +14,20 @@ const NganhNghe = () => {
     const [name, setName] = useState("");
     const [editField, setEditField] = useState();
 
+    const [filterValue, setFilterValue] = useState({
+        code: "",
+        name: ""
+    })
+
     const getData = () => {
         apiLoggedInInstance({
             url: '/api/field',
             method: "GET"
         }).then(response => {
             const responseData = response.data;
-            const sortedData = responseData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            const calTotalPage = Math.ceil(responseData.length / pageSize);
-            setTotalPage(calTotalPage);
-            setData(sortedData);
+            const calTotalPage = Math.ceil(responseData.length / pageSize); // tính toán tổng số trang
+            setTotalPage(calTotalPage); // lưu tổng số trang vào state
+            setData(responseData); // lưu data từ api vào state
         })
     }
 
@@ -78,17 +82,46 @@ const NganhNghe = () => {
         })
     }
 
+    const handleSearch = () => {
+        apiLoggedInInstance({
+            url: '/api/field',
+            method: "GET"
+        }).then(response => {
+            let filteredData = response.data;
+            filteredData = filteredData.filter(item => {
+                return item.code.includes(filterValue.code) && item.name.includes(filterValue.name)
+            })
+            const calTotalPage = Math.ceil(filteredData.length / pageSize); // tính toán tổng số trang
+            setTotalPage(calTotalPage); // lưu tổng số trang vào state
+            setData(filteredData);
+        })
+        
+       
+    }
+
+    const handleReset = () => {
+        setFilterValue({
+            code: "",
+            name: ""
+        })
+        getData()
+    }
+
+    // lấy dữ liệu từ api lần đầu và khi pageSize thay đổi
     useEffect(() => {
-        getData();
+        getData(); //
     }, [pageSize]);
 
+    // gọi khi state data, currentpage, pageSize thay đổi
     useEffect(() => {
         // 1 - 10
         // 10 - 20
         // 20 - 30
-        const paginateData = data.slice(((currentPage - 1) * pageSize), currentPage * pageSize);
+        const sortedData = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // sắp xếp
+        const paginateData = sortedData.slice(((currentPage - 1) * pageSize), currentPage * pageSize);
         setPaginatedData(paginateData);
     }, [data, currentPage, pageSize])
+
     return (
         <div className='w-full'>
             <div className='w-full flex justify-between items-center'>
@@ -110,6 +143,31 @@ const NganhNghe = () => {
                             <th className='border border-[#000]'>(*)</th>
                             <th className='border border-[#000]'>Mã ngành nghề</th>
                             <th className='border border-[#000]'>Tên ngành nghề</th>
+                        </tr>
+                        <tr>
+                            <td className='border border-[#000]'>
+                                <button onClick={() => {
+                                   handleReset()
+                                }}>
+                                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="0.5" y="0.5" width="31" height="31" rx="2.5" stroke="#E2E3E9"/>
+                                    </svg>
+                                </button>
+                                <button onClick={() => {
+                                    handleSearch()
+                                }}>Tìm kiếm</button>
+                            </td>
+                            <td className='border border-[#000]'></td>
+                            <td className='border border-[#000]'>
+                                <input value={filterValue.code} onChange={(event) => {
+                                    setFilterValue(pre => ({...pre, code: event.target.value}))
+                                }} className='border border-[#000]'/>
+                            </td>
+                            <td className='border border-[#000]'>
+                                <input value={filterValue.name} onChange={(event) => {
+                                    setFilterValue(pre => ({...pre, name: event.target.value}))
+                                }} className='border border-[#000]'/>
+                            </td>
                         </tr>
                     </thead>
                     <tbody>

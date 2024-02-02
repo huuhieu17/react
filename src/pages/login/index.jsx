@@ -23,7 +23,7 @@ const Login = () => {
             const { token, userId } = responseData;
             localStorage.setItem("token", token);
             localStorage.setItem("userId", userId);
-            navigate("/")
+            window.location.href = "/"
         })
     }
     return (

@@ -1,7 +1,11 @@
-import { Link, Outlet, useLocation } from "react-router-dom"
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import styles from "./Layout.module.css"
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Modal from "./Modal";
+import { userContext } from "../contexts/userContext";
 const Layout = () => {
+    const navigate = useNavigate();
+    const userContextData = useContext(userContext);
     const { pathname } = useLocation();
 
     const menus = [
@@ -35,7 +39,7 @@ const Layout = () => {
             <div className={`${styles.rightContent}`}>
                 <div className={`${styles.header}`}>
                     <div>Trường đại học</div>
-                    <div>Logo</div>
+                    <div>{userContextData?.user?.username}</div>
                 </div>
                 <Outlet />
             </div>
@@ -57,12 +61,12 @@ const MenuItem = ({ path, name, child }) => {
 
     return (
         <div>
-            <div onClick={() => {
+            <div className={pathname.includes(path) ? styles.active : null} onClick={() => {
                 setOpen(!open);
             }}>{name}</div>
             {open && child.map((item, index) => (
                 <Link to={`${path}${item.path}`} key={index}>
-                    <div className={pathname === item.path ? styles.active : null}>{item.name}</div>
+                    <div className={pathname.includes(item.path) ? styles.active : null}>{item.name}</div>
                 </Link>
             ))}
         </div>
