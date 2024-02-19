@@ -3,7 +3,7 @@ import { apiLoggedInInstance } from '../../../utils/api';
 import Modal from '../../../components/Modal';
 
 const NganhNghe = () => {
-   { const buttonRef = useRef();}
+   const buttonRef = useRef();
     const [data, setData] = useState([]); // lưu data từ api về
     const [currentPage, setCurrentPage] = useState(1); // lưu thông tin trang hiện tại
     const [pageSize, setPageSize] = useState(10); // số phần tử 1 trang

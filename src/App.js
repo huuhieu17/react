@@ -9,6 +9,7 @@ import Layout from './components/Layout';
 import NotFound from './pages/404';
 import NganhNghe from './pages/danh-muc/nganh-nghe/demo';
 import { UserProvider } from './contexts/userContext';
+import QuanTriThanhVien from './pages/quan-tri-thanh-vien';
 function App() {
   return (
     <UserProvider>
@@ -21,8 +22,10 @@ function App() {
                   <Route path='/danh-muc'>
                       <Route path='nganh-nghe' element={<NganhNghe/>}/>
                   </Route>
+                  <Route path='/quan-tri-thanh-vien' element={<QuanTriThanhVien/>}/>
               </Route>
               <Route path="/login" element={<Login/>} />
+              
             </Routes>
           </BrowserRouter>
     </UserProvider>

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import apiInstance from "../../utils/api";
 import TopImage from "../../assets/images/top.png"
 import BottomImage from "../../assets/images/bottom.png"
+import { userContext } from '../../contexts/userContext';
 const Login = () => {
     const navigate = useNavigate()
     const params = useLocation();
+    const userContextData = useContext(userContext);
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -20,10 +23,14 @@ const Login = () => {
             }
         }).then(response => {
             const responseData = response.data;
+
+            // l
+            userContextData.setUser(responseData);
+
             const { token, userId } = responseData;
             localStorage.setItem("token", token);
             localStorage.setItem("userId", userId);
-            window.location.href = "/"
+            navigate("/")
         })
     }
     return (

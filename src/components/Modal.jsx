@@ -1,7 +1,8 @@
 import React from 'react'
 
 const Modal = (props) => {
-    const {onClose, title, children} = props;
+    const {onClose, title, children, data} = props;
+    
     return (
         <div id="myModal" class="modal">
             <div class="modal-content">

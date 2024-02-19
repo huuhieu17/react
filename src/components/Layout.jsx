@@ -1,20 +1,24 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
-import styles from "./Layout.module.css"
 import { useContext, useEffect, useState } from "react";
-import Modal from "./Modal";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/userContext";
+import styles from "./Layout.module.css";
 const Layout = () => {
     const navigate = useNavigate();
     const userContextData = useContext(userContext);
     const { pathname } = useLocation();
 
+    useEffect(() => {
+        if(!userContextData.user){
+            navigate("/login")
+        }
+    })
     const menus = [
         {
             path: "/",
             name: "Home"
         },
         {
-            path: "/products",
+            path: "/quan-tri-thanh-vien",
             name: "Quản trị thành viên"
         },
         {
@@ -39,7 +43,7 @@ const Layout = () => {
             <div className={`${styles.rightContent}`}>
                 <div className={`${styles.header}`}>
                     <div>Trường đại học</div>
-                    <div>{userContextData?.user?.username}</div>
+                    <div>{userContextData?.user?.name}</div>
                 </div>
                 <Outlet />
             </div>
