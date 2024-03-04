@@ -5,20 +5,26 @@
     display: flex;
 }
 .container .sideBar{
-    width: 25%;
-    border: 1px solid black;
+    width: 20%;
+    border: 1px solid #eee;
     height: 100%;
 }
 
+/* px-4 py-2 text-[#42526E] font-bold */
+.container .sideBar .link{
+    padding: 8px 16px;
+    color: #42526E;
+    font-weight: bold;
+}
+
 .container .sideBar .active{
-    color: aqua;
+    color:  #1890FF;
 }
 
 .container .rightContent{
-    width: 75%;
-    border: 1px solid black;
+    width: 80%;
+    border: 1px solid #eee;
     overflow-y: auto;
-
     height: 100%;
 }
 
@@ -27,5 +33,9 @@
     display: flex;
     justify-content: space-between;
     padding: 24px;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #eee;
+    font-size: 20px;
+    font-weight: bold;
+    color: #172B4D;
+
 }
