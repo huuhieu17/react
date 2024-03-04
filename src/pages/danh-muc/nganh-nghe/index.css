@@ -1,0 +1,13 @@
+.scrollTable {
+    width: 100%;
+}
+
+@media screen and (max-width: 500px) {
+    .scrollTable {
+        width: 1000px;
+        overflow: hidden;
+    }
+    .table{
+        overflow-x: auto;
+    }
+}

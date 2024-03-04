@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DemoModal } from '../../../components/Modal1';
 import { apiLoggedInInstance } from '../../../utils/api';
-
+import "./index.css"
 const NganhNghe = () => {
     const buttonRef = useRef();
     const [data, setData] = useState([]); // lưu data
@@ -135,7 +135,7 @@ const NganhNghe = () => {
                     }}>Thêm ngành nghề</button>
                 </div>
             </div>
-            <div>
+            <div className='scrollTable'>
                 <table className='border border-[#000] w-full'>
                     <thead>
                         <tr className='border border-[#000]'>

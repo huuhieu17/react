@@ -1,12 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { apiLoggedInInstance } from '../../utils/api';
+import { Formik } from 'formik';
+import React, { useEffect, useRef, useState } from 'react';
 import { DemoModal } from '../../components/Modal1';
 import { USER_TYPE } from '../../constants/userType';
-import { Formik } from 'formik';
+import { uploadFile, viewFile } from '../../services/file';
+import { apiLoggedInInstance } from '../../utils/api';
 
 const QuanTriThanhVien = () => {
     // ref
     const inputFileRef = useRef();
+    const filterRef = useRef({
+        address: null,
+        birthday_start: null,
+        birthday_end: null,
+        email: null,
+    })
 
 
     //state lưu data
@@ -16,26 +23,20 @@ const QuanTriThanhVien = () => {
     const [totalPage, setTotalPage] = useState(1);
 
     const [showModal, setShowModal] = useState(false);
-    // filter 
-    const [filterData, setFilterData] = useState({
-        address: null,
-        birthday_start: null,
-        birthday_end: null,
-        email: null,
-    })
     // form
     const [step, setStep] = useState(1); // 1 - chọn vai trò, 2 - nhập thông tin
     const [role, setRole] = useState(USER_TYPE.MANAGER);
     const [nganhNghe, setNganhNghe] = useState([]);
     const [tempAvatar, setTempAvatar] = useState(null)
-
+    const [fileAvatar, setFileAvatar] = useState(null) // state lưu file để upload
+    
     const searchUser = () => {
         apiLoggedInInstance({
             url: '/api/admin/user',
             params: {
                 page_index: pageIndex,
                 page_size: pageSize,
-                ...filterData
+                ...filterRef.current
             }
         }).then(response => {
             const { data: userData, headers } = response //
@@ -55,11 +56,23 @@ const QuanTriThanhVien = () => {
         }
     }
 
-    const handleCreateUser = (values) => {
+    const handleCreateUser = async (values) => {
+        let avatarPath = "";
+        // upload file trước
+        if(fileAvatar){
+            // convert file sang avatar
+            const formData = new FormData();
+            formData.append("upload", fileAvatar);
+            const responseData = await uploadFile(formData)
+            const {data} = responseData;
+            avatarPath = data.pathOnServer
+        }
+        const body = {...values, avatar: avatarPath};
+        // sau khi upload file xong lấy được data file truyền vào body khi tạo user
         apiLoggedInInstance({
             url: '/api/admin/user',
             method: "POST",
-            data: JSON.stringify(values),
+            data: JSON.stringify(body),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -70,19 +83,11 @@ const QuanTriThanhVien = () => {
         })
     }
 
-    const uploadFile = (file) => {
-        const formData = new FormData();
-        formData.append("upload",file)
-        apiLoggedInInstance({
-            url: '/api/file/upload',
-            method: "POST",
-            data: formData,
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }).then(res=> {
-            console.log(res);
-        })
+    // clear filter
+    const clearFilter = () => {
+        filterRef.current = {}
+        searchUser()
+        document.querySelector("form").reset()
     }
 
     // Lấy ra thông tin user
@@ -103,18 +108,22 @@ const QuanTriThanhVien = () => {
     return (
         <div>
             <div className='w-full flex justify-between items-center'>
-                <div>Quản trị thành viên ()</div>
+                <div>Quản trị thành viên</div>
                 <div>
                     <button onClick={() => {
                         setShowModal(true)
                     }}>Thêm thành viên</button>
                 </div>
             </div>
-            <table>
+            <form onSubmit={(event) => {
+                event.preventDefault()
+            }}>
+            <table className='w-full'>
                 <thead>
                     <tr>
-                        <th>STT</th>
+                        <th className='w-[100px]'>STT</th>
                         <th>(*)</th>
+                        <th>Avatar</th>
                         <th>Số điện thoại</th>
                         <th>Email</th>
                         <th>Địa chỉ</th>
@@ -125,13 +134,17 @@ const QuanTriThanhVien = () => {
                 <tbody>
                     <tr>
                         <th>
+                        <button onClick={() => {
+                            clearFilter()
+                            }}>Đặt lại</button>
                             <button onClick={() => {
                                 searchUser();
                             }}>Tìm kiếm</button>
                         </th>
                         <th></th>
+                        <th></th>
                         <td><input type='text' placeholder='Số điện thoại' onChange={(e) => {
-                            setFilterData(pre => ({ ...pre, phone: e.target.value }))
+                            filterRef.current.phone = e.target.value
                         }} /></td>
                         <th></th>
                         <th></th>
@@ -140,8 +153,9 @@ const QuanTriThanhVien = () => {
                     </tr>
                     {data.map((user, index) => (
                         <tr>
-                            <td>{index + 1}</td>
-                            <td></td>
+                            <td>{(pageIndex* pageSize) + index + 1}</td>
+                            <th></th>
+                            <td><ViewFile fileName={user.avatar}/></td>
                             <td>{user.phone}</td>
                             <td>{user.email}</td>
                             <td>{user.address}</td>
@@ -149,9 +163,11 @@ const QuanTriThanhVien = () => {
                             <td>{user.birthday}</td>
                         </tr>
                     ))}
-                    <tfoot>
+                
+                </tbody>
+                <tfoot>
                         <tr>
-                            <td>
+                            <td colSpan={8}>
                                 {[...Array(totalPage)].map((_, i) => (
                                     <button onClick={() => {
                                         setPageIndex(i)
@@ -160,8 +176,9 @@ const QuanTriThanhVien = () => {
                             </td>
                         </tr>
                     </tfoot>
-                </tbody>
             </table>
+            </form>
+            
             {showModal && (
                 <DemoModal title="Thêm thành viên" onClose={() => { onCloseModalCreate() }}>
                     {/* Bước 1: Chọn vai trò */}
@@ -272,7 +289,7 @@ const QuanTriThanhVien = () => {
                                                     </div>
                                                    <input ref={inputFileRef} onChange={(e) => {
                                                         const file = e.target.files[0];
-                                                        uploadFile(file)
+                                                        setFileAvatar(file);
                                                         const urlImage = URL.createObjectURL(file);
                                                         setTempAvatar(urlImage);
                                                    }} type='file' hidden/>
@@ -387,7 +404,7 @@ const QuanTriThanhVien = () => {
                                             <button onClick={() => {
                                                 onCloseModalCreate()
                                             }}>Huỷ</button>
-                                            <button type="submit" disabled={isSubmitting}>Thêm</button>
+                                            <button type="submit" onClick={handleSubmit}>Thêm</button>
 
                                         </div>
                                     </form>
@@ -399,6 +416,33 @@ const QuanTriThanhVien = () => {
                 </DemoModal>
             )}
         </div>
+    )
+}
+
+const ViewFile = ({fileName}) => {
+    
+
+    const [image, setImage] = useState();
+
+    const getFile = async () => {
+        if(!fileName) return;
+        try{
+            const response = await viewFile(fileName);
+            const {data} = response // Blob
+            const url = URL.createObjectURL(data)
+            setImage(url);
+
+        }catch(e){
+            console.log("Lỗi file", e)
+        }
+    }
+    useEffect(() => {
+        getFile();
+    }, [fileName])
+
+    if(!fileName) return <div></div>
+    return (
+        <img className='h-[50px]' src={image} alt=''/>
     )
 }
 

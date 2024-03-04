@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { apiLoggedInInstance } from '../../../utils/api';
 import Modal from '../../../components/Modal';
-
+import "./index.css"
 const NganhNghe = () => {
    const buttonRef = useRef();
     const [data, setData] = useState([]); // lưu data từ api về
@@ -85,58 +85,61 @@ const NganhNghe = () => {
                     setShowModal(true)
                 }} className='border rounded p-2 border-[#000]'>Thêm ngành nghề </button></div>
             </div>
-            <table className='w-full'>
-                <thead>
-                    <tr className='border'>
-                        <th className='border'>STT</th>
-                        <th className='border'>*</th>
-                        <th className='border'>Mã ngành nghề</th>
-                        <th className='border'>Tên Ngành nghề</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.length === 0 && (
+            <div className='scrollTable'>
+                <table className='w-full'>
+                    <thead>
                         <tr className='border'>
-                            <td className='border' colSpan={4}>Không dữ liệu</td>
+                            <th className='border'>STT</th>
+                            <th className='border'>*</th>
+                            <th className='border'>Mã ngành nghề</th>
+                            <th className='border'>Tên Ngành nghề</th>
                         </tr>
-                    )}
-                    {paginatedData.map((field, index) => (
+                    </thead>
+                    <tbody>
+                        {data.length === 0 && (
+                            <tr className='border'>
+                                <td className='border' colSpan={4}>Không dữ liệu</td>
+                            </tr>
+                        )}
+                        {paginatedData.map((field, index) => (
+                            <tr>
+                                <td>{index + 1}</td>
+                                <td></td>
+                                <td>{field.code}</td>
+                                <td>{field.name}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                    <tfoot>
                         <tr>
-                            <td>{index + 1}</td>
-                            <td></td>
-                            <td>{field.code}</td>
-                            <td>{field.name}</td>
+                            <td colSpan={4}>
+                                {[...Array(totalPage)].map((_, index) => {
+                                return  (
+                                    <button
+                                    onClick={() => {
+                                        setCurrentPage(index+1)
+                                    }}
+                                    style={{
+                                        backgroundColor: currentPage === index+ 1 && "blue"
+                                    }}
+                                className='border p-2 border-[#000]'>{index+1}</button>
+                                )
+                                })}
+                                Tổng số trang: {totalPage}
+                                <div>
+                                    <select onChange={(e) => {
+                                        setPageSize(e.target.value)
+                                    }}>
+                                        <option value={10}>10/ trang</option>
+                                        <option value={20}>20/ trang</option>
+                                    </select>
+                                </div>
+                            </td>
                         </tr>
-                    ))}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan={4}>
-                            {[...Array(totalPage)].map((_, index) => {
-                              return  (
-                                <button
-                                onClick={() => {
-                                    setCurrentPage(index+1)
-                                }}
-                                style={{
-                                    backgroundColor: currentPage === index+ 1 && "blue"
-                                }}
-                              className='border p-2 border-[#000]'>{index+1}</button>
-                              )
-                            })}
-                            Tổng số trang: {totalPage}
-                            <div>
-                                <select onChange={(e) => {
-                                    setPageSize(e.target.value)
-                                }}>
-                                    <option value={10}>10/ trang</option>
-                                    <option value={20}>20/ trang</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+                    </tfoot>
+                </table>
+            </div>
+           
             {showModal && (
                 <Modal title="Thêm ngành nghề" onClose={handleClose}>
                    <div className='w-full'>

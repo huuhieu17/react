@@ -2,13 +2,15 @@ import { useContext, useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { userContext } from "../contexts/userContext";
 import styles from "./Layout.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../slices/user";
 const Layout = () => {
     const navigate = useNavigate();
-    const userContextData = useContext(userContext);
+    const {user} = useSelector((state) => state.userState)
     const { pathname } = useLocation();
-
+    const dispatch = useDispatch();
     useEffect(() => {
-        if(!userContextData.user){
+        if(!user){
             navigate("/login")
         }
     })
@@ -42,8 +44,10 @@ const Layout = () => {
             </div>
             <div className={`${styles.rightContent}`}>
                 <div className={`${styles.header}`}>
-                    <div>Trường đại học</div>
-                    <div>{userContextData?.user?.name}</div>
+                    <div onClick={() => {
+                        dispatch(logOut())
+                    }}>Trường đại học</div>
+                    <div>{user?.name}</div>
                 </div>
                 <Outlet />
             </div>

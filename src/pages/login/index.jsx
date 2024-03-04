@@ -4,11 +4,13 @@ import apiInstance from "../../utils/api";
 import TopImage from "../../assets/images/top.png"
 import BottomImage from "../../assets/images/bottom.png"
 import { userContext } from '../../contexts/userContext';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../slices/user';
 const Login = () => {
     const navigate = useNavigate()
     const params = useLocation();
     const userContextData = useContext(userContext);
-
+    const dispatch = useDispatch();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -25,7 +27,7 @@ const Login = () => {
             const responseData = response.data;
 
             // l
-            userContextData.setUser(responseData);
+            dispatch(setUser(responseData))
 
             const { token, userId } = responseData;
             localStorage.setItem("token", token);
