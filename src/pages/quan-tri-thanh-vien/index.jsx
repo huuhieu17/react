@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Field, Formik } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
 import { DemoModal } from '../../components/Modal1';
 import { USER_TYPE } from '../../constants/userType';
@@ -57,6 +57,7 @@ const QuanTriThanhVien = () => {
     }
 
     const handleCreateUser = async (values) => {
+    
         let avatarPath = "";
         // upload file trước
         if(fileAvatar){
@@ -260,6 +261,7 @@ const QuanTriThanhVien = () => {
                                     ) {
                                         errors.email = 'Email không đúng định dạng';
                                     }
+                                    console.log(errors)
                                     return errors;
                                 }}
                                 onSubmit={(values, { setSubmitting }) => {
@@ -270,6 +272,9 @@ const QuanTriThanhVien = () => {
                                 {({
                                     values,
                                     errors,
+
+                                    setValues,
+                                    setFieldValue,
                                     touched,
                                     handleChange,
                                     handleBlur,
@@ -342,9 +347,23 @@ const QuanTriThanhVien = () => {
                                                     <div className='w-full flex items-center'>
                                                         <div className='w-1/2'>Giới tính</div>
                                                         <div className='flex items-center gap-x-2'>
-                                                            <input name='gender' type='radio' value={0} /> <span>Nam</span>
-                                                            <input name='gender' type='radio' value={1} /> <span>Nữ</span>
-                                                            <input name='gender' type='radio' value={2} /> <span>Khác</span>
+                                                            {/* <Field name="gender"> */}
+                                                            <input name='gender' type='radio' onClick={() =>{
+                                                               setFieldValue('gender', 0)
+                                                            }} value={0} />
+                                                            {/* </Field> */}
+                                                            <span>Nam</span>
+                                                            {/* <Field name="gender"> */}
+                                                            <input name='gender' onClick={() => {
+                                                               setFieldValue('gender', 1)
+                                                            }} type='radio' value={1} /> <span>Nữ</span>
+                                                            {/* </Field> */}
+                                                            {/* <Field name="gender"> */}
+                                                            <input name='gender' onClick={()=>{
+                                                               setFieldValue('gender', 2)
+                                                            }} type='radio' value={2} />
+                                                            {/* </Field> */}
+                                                            <span>Khác</span>
                                                         </div>
                                                     </div>
                                                     <div className='w-full'>
