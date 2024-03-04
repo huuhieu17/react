@@ -1,16 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
-import Component from './components/Component';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './pages/login';
-import Home from './pages/home';
-import Products from './pages/product';
+import './App.css';
 import Layout from './components/Layout';
+import { UserProvider } from './contexts/userContext';
 import NotFound from './pages/404';
 import NganhNghe from './pages/danh-muc/nganh-nghe/demo';
-import { UserProvider } from './contexts/userContext';
+import Home from './pages/home';
+import Login from './pages/login';
+import Products from './pages/product';
 import QuanTriThanhVien from './pages/quan-tri-thanh-vien';
+import { useEffect } from 'react';
+import { apiLoggedInInstance } from './utils/api';
+import { useDispatch } from 'react-redux';
+import { setUser } from './slices/user';
 function App() {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    apiLoggedInInstance({
+      url: '/api/auth/user-info'
+    }).then(res=> {
+      dispatch(setUser(res.data))
+    }).catch(e => {
+      window.location.href = "/login"
+    })
+  }, [dispatch])
   return (
     <UserProvider>
       <BrowserRouter>

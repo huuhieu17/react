@@ -5,15 +5,9 @@ import styles from "./Layout.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../slices/user";
 const Layout = () => {
-    const navigate = useNavigate();
     const {user} = useSelector((state) => state.userState)
     const { pathname } = useLocation();
     const dispatch = useDispatch();
-    useEffect(() => {
-        if(!user){
-            navigate("/login")
-        }
-    })
     const menus = [
         {
             path: "/",
