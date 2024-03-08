@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DemoModal } from '../../../components/Modal1';
 import { apiLoggedInInstance } from '../../../utils/api';
 import "./index.css"
+import { io } from 'socket.io-client';
 const NganhNghe = () => {
     const buttonRef = useRef();
+    const socket = io("http://localhost:4000");
     const [data, setData] = useState([]); // lưu data
     const [paginatedData, setPaginatedData] = useState([])
     const [totalPage, setTotalPage] = useState(1);
@@ -41,7 +43,10 @@ const NganhNghe = () => {
             }
         }).then((res) => {
             if (res.data) {
-                getData();
+                // getData();
+                if(socket){
+                    socket.emit("update", 1)
+                }
                 handleClose();
             }
         })
@@ -111,6 +116,14 @@ const NganhNghe = () => {
     useEffect(() => {
         getData(); //
     }, [pageSize]);
+
+    useEffect(() => {
+        if(socket){
+            socket.on("update-data", () =>{
+                getData();
+            })
+        }
+    }, [socket])
 
     // gọi khi state data, currentpage, pageSize thay đổi
     useEffect(() => {

@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { apiLoggedInInstance } from '../../../utils/api';
 import Modal from '../../../components/Modal';
 import "./index.css"
+import { io } from 'socket.io-client';
 const NganhNghe = () => {
    const buttonRef = useRef();
+   const socket = io("http://localhost:4000");
     const [data, setData] = useState([]); // lưu data từ api về
     const [currentPage, setCurrentPage] = useState(1); // lưu thông tin trang hiện tại
     const [pageSize, setPageSize] = useState(10); // số phần tử 1 trang
@@ -35,6 +37,7 @@ const NganhNghe = () => {
     }
 
     const handleCreate = () => {
+        if(!socket) return;
         if(inputValue.name === ""){
             setErrorMsg(pre => ({...pre, name: "Ten khong duoc de trong"}));
         }
@@ -51,7 +54,9 @@ const NganhNghe = () => {
             method: "POST"
         }).then(res=> {
             if(res.data){
-                getData();
+               
+                    socket.emit("update", 1)
+                // getData();
                 handleClose();
                 setInputValue({name: "", code: ""});
             }
@@ -62,6 +67,15 @@ const NganhNghe = () => {
     useEffect(() => {
        getData();
     }, [])
+
+
+    useEffect(() => {
+        if(socket){
+            socket.on("update-data", () => {
+                getData();
+            })
+        }
+    }, [socket])
 
     // xử lý phân trang dữ liệu
     useEffect(() => {

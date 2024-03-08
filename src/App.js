@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { apiLoggedInInstance } from './utils/api';
 import { useDispatch } from 'react-redux';
 import { setUser } from './slices/user';
+import Chat from './pages/chat/Chat';
 function App() {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
                       <Route path='nganh-nghe' element={<NganhNghe/>}/>
                   </Route>
                   <Route path='/quan-tri-thanh-vien' element={<QuanTriThanhVien/>}/>
+                  <Route path='/chat' element={<Chat/>}/>
               </Route>
               <Route path="/login" element={<Login/>} />
               

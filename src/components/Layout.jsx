@@ -1,12 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { userContext } from "../contexts/userContext";
-import styles from "./Layout.module.css";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { logOut } from "../slices/user";
+import styles from "./Layout.module.css";
 const Layout = () => {
     const {user} = useSelector((state) => state.userState)
     const { pathname } = useLocation();
+
     const dispatch = useDispatch();
     const menus = [
         {
