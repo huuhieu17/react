@@ -19,7 +19,7 @@ apiLoggedInInstance.interceptors.response.use(function (response) {
   }, function (error) {
     console.log(error)
     const {response} = error;
-    if(response.status === 403){
+    if(!response || response.status === 403){
         window.location.href = "/login"
     }
     // Any status codes that falls outside the range of 2xx cause this function to trigger
