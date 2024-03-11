@@ -3,6 +3,7 @@ import { DemoModal } from '../../../components/Modal1';
 import { apiLoggedInInstance } from '../../../utils/api';
 import "./index.css"
 import { io } from 'socket.io-client';
+
 const NganhNghe = () => {
     const buttonRef = useRef();
     const socket = io("http://localhost:4000");
@@ -19,20 +20,32 @@ const NganhNghe = () => {
     const [filterValue, setFilterValue] = useState({
         code: "",
         name: ""
-    })
+    });
 
     const getData = () => {
         apiLoggedInInstance({
             url: '/api/field',
-            method: "GET"
+            method: "GET",
         }).then(response => {
             const responseData = response.data;
             const calTotalPage = Math.ceil(responseData.length / pageSize); // tính toán tổng số trang
             setTotalPage(calTotalPage); // lưu tổng số trang vào state
             setData(responseData); // lưu data từ api vào state
+        }).catch(e => {
+            console.log("Lỗi api lấy danh sách ngành nghề",e)
         })
     }
 
+    const doFunction = () => {
+        try{
+            const value = undefined;
+            const error = value.data;
+        }catch(err){
+            console.error("lỗi hàm doFucntion", err)
+        }
+       
+    }
+    doFunction()
     const handleCreate = () => {
         apiLoggedInInstance({
             url: '/api/field',

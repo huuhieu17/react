@@ -55,7 +55,7 @@ const NganhNghe = () => {
         }).then(res=> {
             if(res.data){
                
-                    socket.emit("update", 1)
+                socket.emit("update", 1)
                 // getData();
                 handleClose();
                 setInputValue({name: "", code: ""});

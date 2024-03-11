@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { logOut } from "../slices/user";
+import { logOut, setUser } from "../slices/user";
 import styles from "./Layout.module.css";
+import { apiLoggedInInstance } from "../utils/api";
 const Layout = () => {
     const {user} = useSelector((state) => state.userState)
     const { pathname } = useLocation();
@@ -28,6 +29,16 @@ const Layout = () => {
             ]
         }
     ]
+
+    useEffect(() => {
+      apiLoggedInInstance({
+        url: '/api/auth/user-info'
+      }).then(res=> {
+        dispatch(setUser(res.data))
+      }).catch(e => {
+        console.log(e)
+      })
+    }, [dispatch])
     return (
       <div className={`${styles.container}`}>
         <div className={`${styles.sideBar}`}>

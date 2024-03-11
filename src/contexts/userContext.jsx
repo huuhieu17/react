@@ -10,13 +10,13 @@ export const UserProvider = ({children}) => {
         setUser(null);
     }
 
-    useEffect(() => {
-        apiLoggedInInstance({
-            url: '/api/auth/user-info'
-        }).then(response => {
-            setUser(response.data);
-        })
-    }, [])
+    // useEffect(() => {
+    //     apiLoggedInInstance({
+    //         url: '/api/auth/user-info'
+    //     }).then(response => {
+    //         setUser(response.data);
+    //     })
+    // }, [])
 
     return (
         <userContext.Provider value={{user, setUser, handleLogout}}>
